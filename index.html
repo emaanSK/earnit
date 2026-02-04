@@ -65,21 +65,21 @@
         <button id="useBtn" class="btn btn-use" onclick="toggleUsage()">CANJEAR TIEMPO</button>
     </div>
     
-    <button id="notifBtn" style="background:none; border:none; color:#555; font-size:0.8rem; width:100%; margin-bottom:10px;">🔔 Toca aquí si no suenan las alertas</button>
+    <button id="notifBtn" style="background:none; border:none; color:#555; font-size:0.8rem; width:100%; margin-bottom:10px;">🔔</button>
 
     <div class="form-group">
         <div class="label-sm" style="margin-left: 5px;">NUEVA RUTINA</div>
         
         <select id="taskType" onchange="toggleInputs()">
-            <option value="timer">⏱ Cronómetro (Trabajo + Premio)</option>
-            <option value="click">✅ Check (Solo Premio)</option>
+            <option value="timer">⏱ Cronómetro</option>
+            <option value="click">✅ Check</option>
         </select>
 
         <input type="text" id="taskName" placeholder="Nombre de la tarea...">
         
         <div class="row">
-            <input type="number" id="taskDuration" placeholder="Dura (min)">
-            <input type="number" id="taskReward" placeholder="Ganas (min)">
+            <input type="number" id="taskDuration" placeholder="Duración (min)">
+            <input type="number" id="taskReward" placeholder="Premio (min)">
         </div>
         
         <button class="btn btn-add" onclick="createTask()">+ AÑADIR TAREA</button>
