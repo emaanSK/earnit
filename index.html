@@ -3,72 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EarnIt Pro</title>
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
+    <title>EarnIt Ultimate</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        :root { --primary: #00ff88; --bg: #000000; --card: #1c1c1e; --accent: #ff9d00; --text: #ffffff; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
-        
+        :root { --primary: #00ff88; --bg: #000000; --card: #1c1c1e; --accent: #ff9d00; --red: #ff3b30; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; padding: 20px; margin: 0; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .streak { background: #2c2c2e; padding: 8px 16px; border-radius: 20px; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
-
-        .balance-card { background: var(--card); padding: 30px; border-radius: 28px; text-align: center; margin: 20px 0; border: 1px solid #333; }
-        .time-label { color: #8e8e93; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 5px; }
-        .time-display { font-size: 4rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; letter-spacing: -1px; }
-
-        .form-group { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; }
-        input, select { background: #2c2c2e; border: none; padding: 14px; border-radius: 12px; color: white; font-size: 1rem; -webkit-appearance: none; }
-        
-        .btn { border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s; }
+        .streak { background: #2c2c2e; padding: 8px 16px; border-radius: 20px; color: var(--accent); font-weight: bold; }
+        .balance-card { background: var(--card); padding: 25px; border-radius: 28px; text-align: center; margin: 20px 0; border: 1px solid #333; }
+        .time-display { font-size: 3.5rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
+        .form-group { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        input, select { background: #2c2c2e; border: none; padding: 12px; border-radius: 10px; color: white; font-size: 1rem; }
+        .row { display: flex; gap: 10px; }
+        .btn { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .btn-add { background: var(--primary); color: black; }
-        .btn-use { background: #ff3b30; color: white; width: 100%; margin-top: 15px; }
-        .btn-pause { background: var(--accent); color: white; }
-        .btn-action { background: #3a3a3c; color: var(--primary); padding: 8px 16px; font-size: 0.85rem; }
-
-        .task-list { margin-top: 10px; }
-        .task-item { background: var(--card); padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .task-info b { display: block; font-size: 1.1rem; margin-bottom: 2px; }
-        .task-info span { color: #8e8e93; font-size: 0.85rem; }
-        
-        .timer-running { color: var(--accent) !important; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .btn-use { background: var(--red); color: white; width: 100%; margin-top: 10px; }
+        .btn-pause { background: var(--accent); }
+        .task-item { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .task-info b { display: block; font-size: 1.1rem; }
+        .task-info span { color: #8e8e93; font-size: 0.8rem; }
+        .task-actions { display: flex; gap: 8px; align-items: center; }
+        .btn-action { background: #3a3a3c; color: var(--primary); padding: 10px 15px; border-radius: 10px; font-size: 0.8rem; }
+        .btn-del { background: transparent; color: #555; font-size: 1.2rem; padding: 5px; }
+        .timer-running { color: var(--accent) !important; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 style="margin:0; font-size: 1.5rem;">EarnIt Pro</h1>
+        <h1>EarnIt</h1>
         <div class="streak" id="streakDisplay">🔥 0 DÍAS</div>
     </div>
 
     <div class="balance-card">
-        <div class="time-label">SALDO DISPONIBLE</div>
+        <div style="color: #8e8e93; font-size: 0.8rem;">TIEMPO DISPONIBLE</div>
         <div class="time-display" id="balance">00:00:00</div>
         <button id="useBtn" class="btn btn-use" onclick="toggleUsage()">CANJEAR TIEMPO</button>
     </div>
 
+    <button id="notifBtn" class="btn" style="background: #333; color: #fff; width: 100%; margin-bottom: 20px; font-size: 0.8rem;">🔔 Activar Notificaciones</button>
+
     <div class="form-group">
-        <input type="text" id="taskName" placeholder="Tarea (ej: Leer, Gym...)">
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="taskReward" placeholder="Minutos" style="flex: 1;">
-            <select id="taskType" style="flex: 1;">
-                <option value="click">Check</option>
-                <option value="timer">Reloj</option>
-            </select>
+        <input type="text" id="taskName" placeholder="Tarea (ej: Estudiar)">
+        <div class="row">
+            <input type="number" id="taskDuration" placeholder="Dura (min)">
+            <input type="number" id="taskReward" placeholder="Ganas (min)">
         </div>
-        <button class="btn btn-add" onclick="addTask()">+ AÑADIR A MI RUTINA</button>
+        <select id="taskType">
+            <option value="click">Check (instantáneo)</option>
+            <option value="timer">Con Cronómetro</option>
+        </select>
+        <button class="btn btn-add" onclick="createTask()">+ AÑADIR A MI RUTINA</button>
     </div>
 
-    <div class="task-list" id="taskList"></div>
+    <div id="taskList"></div>
 
     <script>
         let totalSeconds = parseInt(localStorage.getItem('totalSeconds')) || 0;
         let streak = parseInt(localStorage.getItem('streak')) || 0;
-        let lastDate = localStorage.getItem('lastDate') || "";
-        let isUsing = false;
+        let tasks = JSON.parse(localStorage.getItem('tasksArray')) || [];
         let mainInterval;
+        let isUsing = false;
+
+        // Contexto de audio para que suene en iOS
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
+        // Permisos de notificación
+        document.getElementById('notifBtn').onclick = () => {
+            Notification.requestPermission().then(res => {
+                if (res === 'granted') alert("¡Notificaciones activadas!");
+            });
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        };
+
+        function sendNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/1164/1164620.png" });
+                playBeep();
+            } else {
+                playBeep();
+            }
+        }
 
         function updateDisplay() {
             let h = Math.floor(totalSeconds / 3600);
@@ -80,110 +107,140 @@
             document.getElementById('streakDisplay').innerText = `🔥 ${streak} DÍAS`;
         }
 
-        function addTask() {
+        function createTask() {
             const name = document.getElementById('taskName').value;
+            const duration = document.getElementById('taskDuration').value || 0;
             const reward = document.getElementById('taskReward').value;
             const type = document.getElementById('taskType').value;
-            if (!name || !reward) return;
+            if (!name || !reward) return alert("Nombre y recompensa obligatorios");
 
-            const id = Date.now();
-            const taskHtml = `
-                <div class="task-item" id="task-${id}">
-                    <div class="task-info">
-                        <b>${name}</b>
-                        <span id="label-${id}">Recompensa: +${reward}m</span>
-                    </div>
-                    <button class="btn btn-action" id="btn-${id}" onclick="${type === 'click' ? `claim(${reward*60}, '${id}')` : `startTaskTimer(${reward*60}, '${id}')`}">
-                        ${type === 'click' ? 'Hecho' : 'Iniciar'}
-                    </button>
-                </div>`;
-            
-            document.getElementById('taskList').insertAdjacentHTML('afterbegin', taskHtml);
+            const newTask = { id: Date.now(), name, duration: parseInt(duration), reward: parseInt(reward), type, endTime: null, notified: false };
+            tasks.push(newTask);
             saveTasks();
-            document.getElementById('taskName').value = "";
-            document.getElementById('taskReward').value = "";
+            renderTasks();
+            document.getElementById('taskName').value = ""; document.getElementById('taskDuration').value = ""; document.getElementById('taskReward').value = "";
         }
 
-        function claim(seconds, id) {
-            totalSeconds += seconds;
-            updateStreak();
-            updateDisplay();
-            if(id) {
-                const btn = document.getElementById(`btn-${id}`);
-                btn.innerText = "¡+"+(seconds/60)+"m!";
-                setTimeout(() => btn.innerText = "Hecho", 2000);
-            }
-        }
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            container.innerHTML = "";
+            const now = Date.now();
 
-        function updateStreak() {
-            const today = new Date().toDateString();
-            if (lastDate !== today) {
-                streak++;
-                lastDate = today;
-                localStorage.setItem('streak', streak);
-                localStorage.setItem('lastDate', lastDate);
-            }
-        }
+            tasks.forEach(task => {
+                let statusText = task.type === 'click' ? `Ganas: ${task.reward}m` : `Dura: ${task.duration}m | Ganas: ${task.reward}m`;
+                let btnText = task.type === 'click' ? "Completar" : "Iniciar";
+                let isRunning = false;
 
-        function startTaskTimer(seconds, id) {
-            let remaining = seconds;
-            const btn = document.getElementById(`btn-${id}`);
-            const label = document.getElementById(`label-${id}`);
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            
-            const t = setInterval(() => {
-                remaining--;
-                let m = Math.floor(remaining/60);
-                let s = remaining%60;
-                label.innerText = `⏳ Quedan: ${m}:${s.toString().padStart(2,'0')}`;
-                label.classList.add("timer-running");
-                
-                if (remaining <= 0) {
-                    clearInterval(t);
-                    claim(seconds, id);
-                    label.innerText = "¡Completado!";
-                    label.classList.remove("timer-running");
-                    btn.disabled = false;
-                    btn.style.opacity = "1";
-                    btn.innerText = "Reiniciar";
+                if (task.endTime && task.endTime > now) {
+                    let rem = Math.ceil((task.endTime - now) / 1000);
+                    statusText = `⏳ Quedan: ${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+                    btnText = "En curso...";
+                    isRunning = true;
+                } else if (task.endTime && task.endTime <= now) {
+                    statusText = "¡LISTO!";
+                    btnText = "Cobrar";
+                    if (!task.notified) {
+                        sendNotification("¡Tarea Terminada!", `Has completado: ${task.name}`);
+                        task.notified = true;
+                        saveTasks();
+                    }
                 }
-            }, 1000);
+
+                container.innerHTML += `
+                    <div class="task-item">
+                        <div class="task-info">
+                            <b>${task.name}</b>
+                            <span class="${isRunning ? 'timer-running' : ''}">${statusText}</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-action" onclick="handleTask(${task.id})" ${isRunning ? 'disabled' : ''}>${btnText}</button>
+                            <button class="btn-del" onclick="deleteTask(${task.id})">✕</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function handleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            const now = Date.now();
+            if (task.type === 'click') {
+                claim(task.reward * 60);
+            } else {
+                if (!task.endTime || now > task.endTime) {
+                    if (task.endTime && now > task.endTime) {
+                        claim(task.reward * 60);
+                        task.endTime = null;
+                        task.notified = false;
+                    } else {
+                        task.endTime = now + (task.duration * 60000);
+                        task.notified = false;
+                    }
+                }
+            }
+            saveTasks(); renderTasks();
+        }
+
+        function claim(seconds) {
+            totalSeconds += seconds;
+            const today = new Date().toDateString();
+            if (localStorage.getItem('lastDate') !== today) {
+                streak++;
+                localStorage.setItem('lastDate', today);
+                localStorage.setItem('streak', streak);
+            }
+            updateDisplay();
         }
 
         function toggleUsage() {
             const btn = document.getElementById('useBtn');
             if (!isUsing) {
-                if (totalSeconds <= 0) return alert("Sin tiempo disponible.");
+                if (totalSeconds <= 0) return;
                 isUsing = true;
+                localStorage.setItem('usageStartTime', Date.now());
                 btn.innerText = "PAUSAR (GUARDAR)";
                 btn.classList.add("btn-pause");
-                mainInterval = setInterval(() => {
-                    if (totalSeconds > 0) {
-                        totalSeconds--;
-                        updateDisplay();
-                    } else { stopUsage(); }
-                }, 1000);
+                mainInterval = setInterval(updateUsage, 1000);
+            } else { stopUsage(); }
+        }
+
+        function updateUsage() {
+            if (totalSeconds > 0) {
+                totalSeconds--;
+                updateDisplay();
+                if (totalSeconds === 0) {
+                    sendNotification("¡Tiempo agotado!", "Vuelve a tus tareas para ganar más tiempo.");
+                    stopUsage();
+                }
             } else { stopUsage(); }
         }
 
         function stopUsage() {
             isUsing = false;
             clearInterval(mainInterval);
+            localStorage.removeItem('usageStartTime');
             const btn = document.getElementById('useBtn');
             btn.innerText = "CANJEAR TIEMPO";
             btn.classList.remove("btn-pause");
         }
 
-        function saveTasks() {
-            localStorage.setItem('savedTasksHtml', document.getElementById('taskList').innerHTML);
+        function saveTasks() { localStorage.setItem('tasksArray', JSON.stringify(tasks)); }
+
+        function sync() {
+            const now = Date.now();
+            const usageStart = localStorage.getItem('usageStartTime');
+            if (usageStart) {
+                const elapsed = Math.floor((now - parseInt(usageStart)) / 1000);
+                totalSeconds = Math.max(0, totalSeconds - elapsed);
+                if (totalSeconds === 0) stopUsage();
+                else localStorage.setItem('usageStartTime', now);
+            }
+            updateDisplay();
+            renderTasks();
         }
 
-        window.onload = () => {
-            const h = localStorage.getItem('savedTasksHtml');
-            if (h) document.getElementById('taskList').innerHTML = h;
-            updateDisplay();
-        };
+        window.onload = () => { sync(); setInterval(renderTasks, 1000); };
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) sync(); });
+        function deleteTask(id) { tasks = tasks.filter(t => t.id !== id); saveTasks(); renderTasks(); }
     </script>
 </body>
 </html>
