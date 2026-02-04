@@ -3,98 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EarnIt Ultimate</title>
+    <title>EarnIt Final</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        :root { --primary: #00ff88; --bg: #000000; --card: #1c1c1e; --accent: #ff9d00; --red: #ff3b30; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; padding: 20px; margin: 0; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .streak { background: #2c2c2e; padding: 8px 16px; border-radius: 20px; color: var(--accent); font-weight: bold; }
-        .balance-card { background: var(--card); padding: 25px; border-radius: 28px; text-align: center; margin: 20px 0; border: 1px solid #333; }
-        .time-display { font-size: 3.5rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
-        .form-group { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        input, select { background: #2c2c2e; border: none; padding: 12px; border-radius: 10px; color: white; font-size: 1rem; }
-        .row { display: flex; gap: 10px; }
-        .btn { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .btn-add { background: var(--primary); color: black; }
-        .btn-use { background: var(--red); color: white; width: 100%; margin-top: 10px; }
-        .btn-pause { background: var(--accent); }
-        .task-item { background: var(--card); padding: 15px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .task-info b { display: block; font-size: 1.1rem; }
-        .task-info span { color: #8e8e93; font-size: 0.8rem; }
+        /* RESET GLOBAL: Esto arregla que los inputs se salgan de la pantalla */
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        :root { --primary: #00ff88; --bg: #000000; --card: #1c1c1e; --accent: #ff9d00; --red: #ff453a; --input-bg: #2c2c2e; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: white; padding: 20px; margin: 0; padding-bottom: 40px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 20px; }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: -1px; }
+        .streak { background: #2c2c2e; padding: 6px 14px; border-radius: 20px; color: var(--accent); font-weight: 700; font-size: 0.9rem; border: 1px solid #3a3a3c; }
+
+        .balance-card { background: var(--card); padding: 30px 20px; border-radius: 24px; text-align: center; margin-bottom: 25px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .label-sm { color: #8e8e93; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 5px; }
+        .time-display { font-size: 3.8rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -2px; }
+
+        .form-group { background: var(--card); padding: 20px; border-radius: 24px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #333; }
+        
+        input, select { background: var(--input-bg); border: 1px solid transparent; padding: 14px; border-radius: 14px; color: white; font-size: 1rem; width: 100%; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--primary); background: #3a3a3c; }
+        
+        /* Contenedor flexible para los inputs de tiempo */
+        .row { display: flex; gap: 10px; transition: all 0.3s ease; }
+        
+        .btn { border: none; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.1s; width: 100%; }
+        .btn:active { transform: scale(0.98); }
+        .btn-add { background: var(--primary); color: black; margin-top: 5px; }
+        .btn-use { background: var(--red); color: white; margin-top: 15px; }
+        .btn-pause { background: var(--accent); color: black; }
+
+        .task-list { display: flex; flex-direction: column; gap: 10px; }
+        .task-item { background: var(--card); padding: 16px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .task-info { flex: 1; margin-right: 10px; }
+        .task-info b { display: block; font-size: 1.05rem; margin-bottom: 3px; }
+        .task-info span { color: #8e8e93; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+        
         .task-actions { display: flex; gap: 8px; align-items: center; }
-        .btn-action { background: #3a3a3c; color: var(--primary); padding: 10px 15px; border-radius: 10px; font-size: 0.8rem; }
-        .btn-del { background: transparent; color: #555; font-size: 1.2rem; padding: 5px; }
+        .btn-action { background: #3a3a3c; color: var(--primary); padding: 10px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; border: none; cursor: pointer; }
+        .btn-del { background: transparent; color: #666; font-size: 1.2rem; padding: 5px 10px; border: none; cursor: pointer; }
+        
         .timer-running { color: var(--accent) !important; font-weight: bold; }
+        
+        /* Clase para ocultar elementos */
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>EarnIt</h1>
-        <div class="streak" id="streakDisplay">🔥 0 DÍAS</div>
+        <div class="streak" id="streakDisplay">🔥 0</div>
     </div>
 
     <div class="balance-card">
-        <div style="color: #8e8e93; font-size: 0.8rem;">TIEMPO DISPONIBLE</div>
+        <div class="label-sm">TIEMPO DISPONIBLE</div>
         <div class="time-display" id="balance">00:00:00</div>
         <button id="useBtn" class="btn btn-use" onclick="toggleUsage()">CANJEAR TIEMPO</button>
     </div>
-
-    <button id="notifBtn" class="btn" style="background: #333; color: #fff; width: 100%; margin-bottom: 20px; font-size: 0.8rem;">🔔 Activar Notificaciones</button>
+    
+    <button id="notifBtn" style="background:none; border:none; color:#555; font-size:0.8rem; width:100%; margin-bottom:10px;">🔔 Toca aquí si no suenan las alertas</button>
 
     <div class="form-group">
-        <input type="text" id="taskName" placeholder="Tarea (ej: Estudiar)">
+        <div class="label-sm" style="margin-left: 5px;">NUEVA RUTINA</div>
+        
+        <select id="taskType" onchange="toggleInputs()">
+            <option value="timer">⏱ Cronómetro (Trabajo + Premio)</option>
+            <option value="click">✅ Check (Solo Premio)</option>
+        </select>
+
+        <input type="text" id="taskName" placeholder="Nombre de la tarea...">
+        
         <div class="row">
             <input type="number" id="taskDuration" placeholder="Dura (min)">
             <input type="number" id="taskReward" placeholder="Ganas (min)">
         </div>
-        <select id="taskType">
-            <option value="click">Check (instantáneo)</option>
-            <option value="timer">Con Cronómetro</option>
-        </select>
-        <button class="btn btn-add" onclick="createTask()">+ AÑADIR A MI RUTINA</button>
+        
+        <button class="btn btn-add" onclick="createTask()">+ AÑADIR TAREA</button>
     </div>
 
-    <div id="taskList"></div>
+    <div class="label-sm" style="margin-left: 5px; margin-bottom: 10px;">MIS TAREAS</div>
+    <div class="task-list" id="taskList"></div>
 
     <script>
+        // --- Lógica de Interfaz ---
+        function toggleInputs() {
+            const type = document.getElementById('taskType').value;
+            const durationInput = document.getElementById('taskDuration');
+            
+            if (type === 'click') {
+                durationInput.classList.add('hidden');
+            } else {
+                durationInput.classList.remove('hidden');
+            }
+        }
+
+        // --- Lógica del Sistema ---
         let totalSeconds = parseInt(localStorage.getItem('totalSeconds')) || 0;
         let streak = parseInt(localStorage.getItem('streak')) || 0;
         let tasks = JSON.parse(localStorage.getItem('tasksArray')) || [];
         let mainInterval;
         let isUsing = false;
 
-        // Contexto de audio para que suene en iOS
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
         function playBeep() {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime); // Tono A5
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
         }
 
-        // Permisos de notificación
         document.getElementById('notifBtn').onclick = () => {
-            Notification.requestPermission().then(res => {
-                if (res === 'granted') alert("¡Notificaciones activadas!");
-            });
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            Notification.requestPermission();
+            playBeep(); // Test sonido
+            alert("Sonido activado. Recuerda quitar el modo Silencio.");
         };
 
         function sendNotification(title, body) {
             if (Notification.permission === 'granted') {
-                new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/1164/1164620.png" });
-                playBeep();
-            } else {
-                playBeep();
+                new Notification(title, { body });
             }
+            playBeep(); // Sonido siempre
         }
 
         function updateDisplay() {
@@ -104,21 +143,37 @@
             document.getElementById('balance').innerText = 
                 `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
             localStorage.setItem('totalSeconds', totalSeconds);
-            document.getElementById('streakDisplay').innerText = `🔥 ${streak} DÍAS`;
+            document.getElementById('streakDisplay').innerText = `🔥 ${streak}`;
         }
 
         function createTask() {
             const name = document.getElementById('taskName').value;
-            const duration = document.getElementById('taskDuration').value || 0;
-            const reward = document.getElementById('taskReward').value;
             const type = document.getElementById('taskType').value;
-            if (!name || !reward) return alert("Nombre y recompensa obligatorios");
+            const reward = document.getElementById('taskReward').value;
+            // Si es check, duración es 0, si no, lo que ponga el usuario
+            const duration = type === 'click' ? 0 : document.getElementById('taskDuration').value;
 
-            const newTask = { id: Date.now(), name, duration: parseInt(duration), reward: parseInt(reward), type, endTime: null, notified: false };
+            if (!name || !reward) return alert("Falta nombre o recompensa");
+            if (type === 'timer' && !duration) return alert("Falta la duración");
+
+            const newTask = { 
+                id: Date.now(), 
+                name, 
+                duration: parseInt(duration), 
+                reward: parseInt(reward), 
+                type, 
+                endTime: null, 
+                notified: false 
+            };
+            
             tasks.push(newTask);
             saveTasks();
             renderTasks();
-            document.getElementById('taskName').value = ""; document.getElementById('taskDuration').value = ""; document.getElementById('taskReward').value = "";
+            
+            // Limpiar inputs
+            document.getElementById('taskName').value = "";
+            document.getElementById('taskDuration').value = "";
+            document.getElementById('taskReward').value = "";
         }
 
         function renderTasks() {
@@ -127,22 +182,33 @@
             const now = Date.now();
 
             tasks.forEach(task => {
-                let statusText = task.type === 'click' ? `Ganas: ${task.reward}m` : `Dura: ${task.duration}m | Ganas: ${task.reward}m`;
-                let btnText = task.type === 'click' ? "Completar" : "Iniciar";
+                let statusText = "";
+                let btnText = "";
                 let isRunning = false;
 
-                if (task.endTime && task.endTime > now) {
-                    let rem = Math.ceil((task.endTime - now) / 1000);
-                    statusText = `⏳ Quedan: ${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
-                    btnText = "En curso...";
-                    isRunning = true;
-                } else if (task.endTime && task.endTime <= now) {
-                    statusText = "¡LISTO!";
-                    btnText = "Cobrar";
-                    if (!task.notified) {
-                        sendNotification("¡Tarea Terminada!", `Has completado: ${task.name}`);
-                        task.notified = true;
-                        saveTasks();
+                if (task.type === 'click') {
+                    statusText = `Ganas: +${task.reward} min`;
+                    btnText = "Check";
+                } else {
+                    // Lógica Cronómetro
+                    if (task.endTime && task.endTime > now) {
+                        let rem = Math.ceil((task.endTime - now) / 1000);
+                        let m = Math.floor(rem/60);
+                        let s = (rem%60).toString().padStart(2,'0');
+                        statusText = `⏳ ${m}:${s}`;
+                        btnText = "Esperando...";
+                        isRunning = true;
+                    } else if (task.endTime && task.endTime <= now) {
+                        statusText = "¡TERMINADO!";
+                        btnText = "Cobrar";
+                        if (!task.notified) {
+                            sendNotification("¡Tarea Lista!", `Has completado: ${task.name}`);
+                            task.notified = true;
+                            saveTasks();
+                        }
+                    } else {
+                        statusText = `Dura: ${task.duration}m | Ganas: ${task.reward}m`;
+                        btnText = "Iniciar";
                     }
                 }
 
@@ -153,7 +219,11 @@
                             <span class="${isRunning ? 'timer-running' : ''}">${statusText}</span>
                         </div>
                         <div class="task-actions">
-                            <button class="btn btn-action" onclick="handleTask(${task.id})" ${isRunning ? 'disabled' : ''}>${btnText}</button>
+                            <button class="btn-action" onclick="handleTask(${task.id})" 
+                                style="${btnText === 'Cobrar' ? 'background:#00ff88; color:black;' : ''}"
+                                ${isRunning ? 'disabled' : ''}>
+                                ${btnText}
+                            </button>
                             <button class="btn-del" onclick="deleteTask(${task.id})">✕</button>
                         </div>
                     </div>`;
@@ -163,21 +233,26 @@
         function handleTask(id) {
             const task = tasks.find(t => t.id === id);
             const now = Date.now();
+
             if (task.type === 'click') {
                 claim(task.reward * 60);
             } else {
+                // Si no ha empezado o ya acabó
                 if (!task.endTime || now > task.endTime) {
                     if (task.endTime && now > task.endTime) {
+                        // Cobrar recompensa
                         claim(task.reward * 60);
                         task.endTime = null;
                         task.notified = false;
                     } else {
+                        // Iniciar cronómetro
                         task.endTime = now + (task.duration * 60000);
                         task.notified = false;
                     }
                 }
             }
-            saveTasks(); renderTasks();
+            saveTasks();
+            renderTasks();
         }
 
         function claim(seconds) {
@@ -190,17 +265,28 @@
             }
             updateDisplay();
         }
+        
+        function deleteTask(id) {
+            if(confirm("¿Borrar esta tarea?")) {
+                tasks = tasks.filter(t => t.id !== id);
+                saveTasks();
+                renderTasks();
+            }
+        }
 
         function toggleUsage() {
             const btn = document.getElementById('useBtn');
             if (!isUsing) {
-                if (totalSeconds <= 0) return;
+                if (totalSeconds <= 0) return alert("¡No tienes tiempo ahorrado!");
                 isUsing = true;
                 localStorage.setItem('usageStartTime', Date.now());
                 btn.innerText = "PAUSAR (GUARDAR)";
                 btn.classList.add("btn-pause");
+                btn.classList.remove("btn-use");
                 mainInterval = setInterval(updateUsage, 1000);
-            } else { stopUsage(); }
+            } else {
+                stopUsage();
+            }
         }
 
         function updateUsage() {
@@ -208,7 +294,7 @@
                 totalSeconds--;
                 updateDisplay();
                 if (totalSeconds === 0) {
-                    sendNotification("¡Tiempo agotado!", "Vuelve a tus tareas para ganar más tiempo.");
+                    sendNotification("¡TIEMPO AGOTADO!", "Se acabó el recreo. Vuelve a trabajar.");
                     stopUsage();
                 }
             } else { stopUsage(); }
@@ -221,12 +307,14 @@
             const btn = document.getElementById('useBtn');
             btn.innerText = "CANJEAR TIEMPO";
             btn.classList.remove("btn-pause");
+            btn.classList.add("btn-use");
         }
 
         function saveTasks() { localStorage.setItem('tasksArray', JSON.stringify(tasks)); }
 
         function sync() {
             const now = Date.now();
+            // Sincronizar gasto
             const usageStart = localStorage.getItem('usageStartTime');
             if (usageStart) {
                 const elapsed = Math.floor((now - parseInt(usageStart)) / 1000);
@@ -238,9 +326,9 @@
             renderTasks();
         }
 
+        // Inicialización
         window.onload = () => { sync(); setInterval(renderTasks, 1000); };
         document.addEventListener("visibilitychange", () => { if (!document.hidden) sync(); });
-        function deleteTask(id) { tasks = tasks.filter(t => t.id !== id); saveTasks(); renderTasks(); }
     </script>
 </body>
 </html>
